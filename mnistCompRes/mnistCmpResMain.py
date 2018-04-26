@@ -38,11 +38,12 @@ mnist = input_data.read_data_sets("MNIST_DATA/", one_hot=True)
 
 def startTrain(trainepochnums, hps, mode, gps):
     # images,labels = mnist.train.next_batch(hps.batch_nums)
+    tf.reset_default_graph()
+
     xp = tf.placeholder(tf.float32, [None, hps.des_img_size, hps.des_img_size, hps.img_depth])
     yp = tf.placeholder(tf.float32, [None, 10])
     model = mnistModel.MnistModel(hps, xp, yp, mode)
     model.create_graph()
-
 
     with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
         saver = tf.train.Saver()
@@ -57,6 +58,7 @@ def startTrain(trainepochnums, hps, mode, gps):
 
         base_step = int(peizhi['train_step'])
         end_step = int(base_step + 50000*trainepochnums / hps.batch_nums +1)
+        # end_step = int(base_step + 5000*trainepochnums / hps.batch_nums +1)
         for itstep in range(base_step,end_step):
             if (itstep%10) <= 8:
                 images,labels = mnist.train.next_batch(hps.batch_nums)
@@ -75,8 +77,8 @@ def startTrain(trainepochnums, hps, mode, gps):
                 feed_dict=feed_dict)
 
             if itstep % 100 == 0:
-                trainacc = ModelUtilv3s1.get_accurate(outprediction,inlabels)
-                msg = "trainstep:%5d  loss:%e  train acc:%.5f"%(itstep,cost,trainacc)
+                trainacc = ModelUtilv3s1.get_accurate(outprediction, inlabels)
+                msg = "trainstep:%5d  loss:%e  train acc:%.5f"%(itstep, cost, trainacc)
 
                 if itstep % 200 ==0:
                     logger.showAndLogMsg(msg)
@@ -100,8 +102,11 @@ def startTrain(trainepochnums, hps, mode, gps):
 
 def startTest(hps, mode, gps, msg):
     # images, labels = mnist.test.next_batch(hps.batch_nums)
+    tf.reset_default_graph()
+
     xp = tf.placeholder(tf.float32, [None, hps.des_img_size, hps.des_img_size, hps.img_depth])
     yp = tf.placeholder(tf.float32, [None, 10])
+
     model = mnistModel.MnistModel(hps, xp, yp, mode)
     model.create_graph()
 
@@ -144,8 +149,8 @@ def startTest(hps, mode, gps, msg):
             ModelUtilv3s1.move_variable_from_src2des(gps.save_dirname, gps.des_save_dirname)
 
 
-            email = coreMailUtil.Email('xxxxx','xxxxx')
-            to_list = ['xxxxx@163.com']
+            email = coreMailUtil.Email('xxx','xxx@')
+            to_list = ['xxx@163.com']
             content = msg + "<p>max_acc:"+str(test_acc)+"</p>"
             email.send_mail_html(to_list, 'OCR latest acc',content)
 
@@ -182,6 +187,7 @@ def batch_imgs_reshape_and_agu(batch_imgs,hps):
     batch_imgs = imgUtil.batch_imgs_aug(batch_imgs)
     return batch_imgs
 
+
 def main():
     hps = HParams(batch_nums=50,
                   num_classes=10,
@@ -216,17 +222,19 @@ def main():
         print("start training")
         mode = 'train'
         trainNumsBeforeValid = 4
-        p = Process(target=startTrain,args=(trainNumsBeforeValid, hps, mode, gps))
-        p.start()
-        p.join()
-        # startTrain(trainNumsBeforeValid,hps,mode=mode,gps=gps)
+        # p = Process(target=startTrain,args=(trainNumsBeforeValid, hps, mode, gps))
+        # p.start()
+        # p.join()
+        startTrain(trainNumsBeforeValid,hps,mode=mode,gps=gps)
         print("training end")
 
         print("start test")
         mode = 'test'
-        p = Process(target=startTest, args=(hps, mode, gps, msg))
-        p.start()
-        p.join()
+        # p = Process(target=startTest, args=(hps, mode, gps, msg))
+        # p.start()
+        # p.join()
+
+        startTest(hps,mode=mode, gps=gps, msg=msg)
 
         print("test end")
 
