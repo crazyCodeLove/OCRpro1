@@ -116,8 +116,8 @@ def add_building_block_carriage(batch_num,deepk, carriage_nums, inputs, kernalWi
 
     return outputs
 
-def building_block_incre(batch_num,deepk,inputs,kernalWidth,
-                         is_training_ph,scope=None, layername="layer",
+def building_block_incre(batch_num, deepk, inputs, kernalWidth,
+                         is_training_ph, scope=None, layername="layer",
                          activateFunc=tf.nn.relu, stride=[1, 1, 1, 1]):
     """
     conv layer number: 2
@@ -142,12 +142,12 @@ def building_block_incre(batch_num,deepk,inputs,kernalWidth,
     proj = tf.concat(values=[inputs,zero_pad],axis=3)
 
     tscope = scope + "layer1"
-    y1 = add_BN_conv_layer(inputs,kernalWidth,inDepth,depth,
+    y1 = add_BN_conv_layer(inputs,kernalWidth,depth,
                            is_training_ph,tscope,
                            activateFunc=activateFunc,stride=stride)
 
     tscope = scope + "layer2"
-    y2 = add_BN_conv_layer(y1,kernalWidth,depth,depth,
+    y2 = add_BN_conv_layer(y1,kernalWidth,depth,
                            is_training_ph,tscope,
                            activateFunc=None,stride=stride)
 
@@ -167,12 +167,12 @@ def building_block_same(inputs,kernalWidth,
     depth = inDepth
 
     tscope = scope + "layer1"
-    y1 = add_BN_conv_layer(inputs,kernalWidth,inDepth,depth,
+    y1 = add_BN_conv_layer(inputs,kernalWidth,depth,
                            is_training_ph,tscope,
                            activateFunc=activateFunc,stride=stride)
 
     tscope = scope + "layer2"
-    y2 = add_BN_conv_layer(y1,kernalWidth,depth,depth,
+    y2 = add_BN_conv_layer(y1,kernalWidth,depth,
                            is_training_ph,tscope,
                            activateFunc=None,stride=stride)
 
@@ -193,13 +193,13 @@ def building_block_desc(inputs,is_training_ph, scope=None, layername="layer",
     tscope = scope + "layer1"
 
     kw=1
-    outputs = add_BN_conv_layer(inputs,kw,inDepth,outDepth,is_training_ph,
+    outputs = add_BN_conv_layer(inputs,kw,outDepth,is_training_ph,
                                 tscope,layername=layername,activateFunc=activateFunc,
                                 stride=stride)
     return outputs
 
 
-def add_BN_conv_layer(inputs, kernalWidth, inDepth, outDepth,
+def add_BN_conv_layer(inputs, kernalWidth, outDepth,
                       is_training_ph, scope , layername="layer",
                       activateFunc=tf.nn.relu, stride=[1, 1, 1, 1]):
 
