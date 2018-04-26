@@ -9,6 +9,9 @@ from matplotlib import pyplot as plt
 mnist = input_data.read_data_sets("MNIST_DATA/", one_hot=True)
 
 def gen_salt_filter():
+    '''
+    添加椒盐噪声然后使用中值滤波和均值滤波
+    '''
     images,labels = mnist.train.next_batch(20)
     shape = images.shape
     for it in range(shape[0]):
