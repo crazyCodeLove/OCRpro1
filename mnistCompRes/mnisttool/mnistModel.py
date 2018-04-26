@@ -74,7 +74,7 @@ class MnistModel(object):
             tscope = "carriage" + str(it) + "des"
             outputs = ModelUtilv3s1.building_block_desc(
                 outputs, is_training_ph, scope=tscope, layername=layername,
-                activateFunc=None, stride=stride)
+                activateFunc=None, stride=stride, descrate=self.hps.descrate)
             ###################3
             # print outputs.get_shape().as_list()
             ############33333333333333

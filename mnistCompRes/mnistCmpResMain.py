@@ -20,7 +20,7 @@ weight layer number is 2+2*carriage_block_num + len(carriage_block_num)=2*[2,2,2
 HParams = namedtuple('HParams',
                      'batch_nums, num_classes, deep_net_fkn,'
                      'img_depth, img_width, deepk, carriage_block_num,'
-                     'des_img_size')
+                     'des_img_size, descrate')
 
 GParams = namedtuple('GParams',
                      'save_file_name, des_save_dirname, save_dirname, peizhi_filename')
@@ -32,7 +32,7 @@ peizhi_dict = {'lrn_rate':1e-2,
                'max_test_acc':0}
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompRes/mnistCmpResn1.txt')
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompRes/mnistCmpResn2.txt')
 mnist = input_data.read_data_sets("MNIST_DATA/", one_hot=True)
 
 
@@ -190,13 +190,14 @@ def batch_imgs_reshape_and_agu(batch_imgs,hps):
 
 def main():
     hps = HParams(batch_nums=50,
-                  num_classes=10,
+                  num_classes=20,
                   deep_net_fkn=10,
                   img_depth=1,
                   img_width=28,
-                  deepk=[2.8,2.6,2.6,2.6],
+                  deepk=[2.8,2.8,2.6,2.6],
                   carriage_block_num=[2,2,2,2],
-                  des_img_size=96)
+                  des_img_size=96,
+                  descrate=0.6)
 
     save_file_name = '/home/allen/work/variableSave/OCRpro1/temp/deepres.ckpy'
     des_save_dirname = '/home/allen/work/variableSave/OCRpro1/mnist/mnistCompRes'
