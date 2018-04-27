@@ -212,6 +212,7 @@ def add_BN_conv_layer(inputs, kernalWidth, outDepth,
 
         y1 = tf.nn.conv2d(inputs, Weights, stride, padding='SAME') + biases
 
+
         outputs = tf.cond(is_training_ph,
                            lambda: batch_norm(y1,decay=0.94, is_training=True,
                                               center=False, scale=True,
