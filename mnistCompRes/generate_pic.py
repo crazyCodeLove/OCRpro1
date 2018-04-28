@@ -14,6 +14,9 @@ from PIL import Image
 mnist = input_data.read_data_sets("MNIST_DATA/", one_hot=True)
 
 def get_single_img_label():
+    '''
+    获得单张图片和对应的label，图片已经被转化为2D形状，label转化为对应的数字
+    '''
     for epoch in range(10000):
         images, labels = mnist.train.next_batch(10,shuffle=True)
         for it in range(10):
@@ -51,6 +54,9 @@ def gen_salt_filter():
         plt.show()
 
 def gauss_filter():
+    '''
+    对图片进行放大，然后进行高斯滤波，然后进行中值滤波
+    '''
     gen = get_single_img_label()
     for img,label in gen:
         resize_img = resize_pic(img,[96,96])
@@ -76,6 +82,9 @@ def gauss_filter():
         plt.show()
 
 def canny_filter():
+    '''
+    对高斯滤波后的图像进行canny滤波
+    '''
     gen = get_single_img_label()
     for img, label in gen:
         img = resize_pic(img, [96, 96])
@@ -108,6 +117,9 @@ def canny_filter():
         plt.show()
 
 def skeleton_retrive():
+    '''
+    提取数字图片的骨架
+    '''
     gen = get_single_img_label()
     for img, label in gen:
         img = resize_pic(img, [96, 96])
@@ -130,6 +142,9 @@ def skeleton_retrive():
         plt.show()
 
 def same_number():
+    '''
+    相同数字的图片
+    '''
     gen = get_single_img_label()
     for img, label in gen:
         if(np.argmax(label) == 6):
