@@ -21,7 +21,7 @@ def get_single_img_label():
         images, labels = mnist.train.next_batch(10,shuffle=True)
         for it in range(10):
             img = np.reshape(images[it], newshape=(28, 28))
-            yield (img,labels[it])
+            yield (img,np.argmax(labels[it]))
 
 def resize_pic(img,des_size):
     img = Image.fromarray(img)
@@ -100,7 +100,7 @@ def canny_filter():
 
         plt.figure()
         plt.subplot(2, 2, 1)
-        plt.title(np.argmax(label))
+        plt.title(label)
         plt.imshow(canny_img2)
 
         plt.subplot(2, 2, 2)
@@ -147,7 +147,7 @@ def same_number():
     '''
     gen = get_single_img_label()
     for img, label in gen:
-        if(np.argmax(label) == 6):
+        if(label == 6):
             plt.figure()
             plt.imshow(img)
             plt.show()
@@ -168,7 +168,7 @@ def strage_1():
 
         plt.figure()
         plt.subplot(2,2,1)
-        plt.title(np.argmax(label))
+        plt.title(label)
         plt.imshow(img)
 
         plt.subplot(2,2,2)
