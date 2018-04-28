@@ -152,6 +152,44 @@ def same_number():
             plt.imshow(img)
             plt.show()
 
+def gabor_filter():
+    gen = get_single_img_label()
+    for img, label in gen:
+        img = resize_pic(img, [96, 96])
+        gauss_img = filters.gaussian(img, sigma=0.9)
+        gabor_real0,gabor_virt0 = filters.gabor(gauss_img,frequency=0.8, theta=0)
+        gabor_real45,gabor_virt45 = filters.gabor(gauss_img,frequency=0.8, theta=45)
+        gabor_real90,gabor_virt90 = filters.gabor(gauss_img,frequency=0.9, theta=90)
+        gabor_real135,gabor_virt135 = filters.gabor(gauss_img,frequency=0.9, theta=135)
+
+        plt.figure()
+        plt.subplot(2,3,1)
+        plt.imshow(img)
+        plt.title('ori')
+
+        plt.subplot(2, 3, 2)
+        plt.imshow(gauss_img)
+        plt.title('gauss')
+
+        plt.subplot(2, 3, 3)
+        plt.imshow(gabor_real0)
+        plt.title('0')
+
+        plt.subplot(2, 3, 4)
+        plt.imshow(gabor_real45)
+        plt.title('45')
+
+        plt.subplot(2, 3, 5)
+        plt.imshow(gabor_real90)
+        plt.title('90')
+
+        plt.subplot(2, 3, 6)
+        plt.imshow(gabor_real135)
+        plt.title('135')
+
+        plt.show()
+
+
 
 
 
@@ -189,7 +227,8 @@ def main():
     # strage_1()
     # canny_filter()
     # skeleton_retrive()
-    same_number()
+    # same_number()
+    gabor_filter()
 
 if __name__ == "__main__":
     main()
