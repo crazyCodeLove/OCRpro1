@@ -197,7 +197,7 @@ def main():
                   deepk=[2.6, 2.6, 2.4, 2],
                   carriage_block_num=[2,2,2,2],
                   des_img_size=96,
-                  descrate=[0.7, 0.7, 0.8, 1])
+                  descrate=[0.7, 0.7, 0.8, 0.95])
 
     save_file_name = '/home/allen/work/variableSave/OCRpro1/temp/deepres.ckpy'
     des_save_dirname = '/home/allen/work/variableSave/OCRpro1/mnist/mnistCompRes'
