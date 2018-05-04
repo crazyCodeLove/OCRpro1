@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
 #create data
-mnist = input_data.read_data_sets("MNIST_DATA/", one_hot=True)
+mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
 #define add conv layer function
 def add_conv_layer(inputs, patch_size, in_depth, out_depth, layer_name="layer", activate_function=None, keep_prob=-1, strides = [1,1,1,1]):
