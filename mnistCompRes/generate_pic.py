@@ -189,8 +189,109 @@ def gabor_filter():
 
         plt.show()
 
+def activate_function():
 
 
+
+    plt.figure()
+
+    ax = plt.subplot(3,2,1)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data',0))
+    ax.spines['bottom'].set_position(('data',0))
+    ax.set_xlim(-6,6)
+    ax.set_ylim(-1,1)
+    x = np.linspace(-5,5,1000)
+    y = [1/(1+np.exp(-i)) for i in x]
+    plt.title('Sigmoid')
+    plt.plot(x,y)
+
+    ax = plt.subplot(3,2,2)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    ax.set_xlim(-6, 6)
+    ax.set_ylim(-1, 1)
+    x = np.linspace(-5,5,1000)
+    y = [(np.exp(i)-np.exp(-i))/(np.exp(i)+np.exp(-i)) for i in x]
+    plt.title('Tanh')
+    plt.plot(x,y)
+
+    ax = plt.subplot(3,2, 3)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    ax.set_xlim(-6, 6)
+    ax.set_ylim(-1, 1)
+    x = np.linspace(-5, 5, 1000)
+    y = []
+    for i in x:
+        if i<0 :
+            y.append(0)
+        else:
+            y.append(i)
+    plt.title('Relu')
+    plt.plot(x, y)
+
+    ax = plt.subplot(3, 2, 4)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    ax.set_xlim(-6, 6)
+    ax.set_ylim(-1, 1)
+    x = np.linspace(-5, 5, 1000)
+    y = []
+    for i in x:
+        if i < 0:
+            y.append(0.1*i)
+        else:
+            y.append(i)
+    plt.title('LeakyRelu')
+    plt.plot(x, y)
+
+    ax = plt.subplot(3, 2, 5)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    ax.set_xlim(-6, 6)
+    ax.set_ylim(-1, 1)
+    x = np.linspace(-5, 5, 1000)
+    y = []
+    for i in x:
+        if i < 0:
+            y.append(0.1 * (np.exp(i) - 1))
+        else:
+            y.append(i)
+    plt.title('ELU')
+    plt.plot(x, y)
+
+
+
+
+    plt.show()
+
+def aserialPic():
+    gen = get_single_img_label()
+    already = []
+    pic = []
+    for img, label in gen:
+        if label not in already:
+            already.append(label)
+            pic.append(img)
+            if len(pic) == 10:
+                break
+
+    plt.figure()
+
+    for i in range(10):
+        plt.subplot(3,4,i+1)
+        plt.imshow(pic[i])
+    plt.show()
 
 
 def strage_1():
@@ -228,7 +329,9 @@ def main():
     # canny_filter()
     # skeleton_retrive()
     # same_number()
-    gabor_filter()
+    # gabor_filter()
+    # activate_function()
+    aserialPic()
 
 if __name__ == "__main__":
     main()

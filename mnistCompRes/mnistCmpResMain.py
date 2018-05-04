@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 #coding=utf-8
-import tensorflow as tf
+import pickle
 from collections import namedtuple
+
+import tensorflow as tf
+from tensorflow.examples.tutorials.mnist import input_data
+
 from mnistCompRes.mnisttool import ModelUtilv3s1
 from mnistCompRes.mnisttool import imgUtil
 from mnistCompRes.mnisttool import mnistModel
-
 from tools import coreMailUtil
-from tensorflow.examples.tutorials.mnist import input_data
-from multiprocessing import Process
-import pickle
-
 
 """
 weight layer number is 2+2*carriage_block_num + len(carriage_block_num)=2*[2,2,2,2]+ 6= 22
@@ -32,8 +31,8 @@ peizhi_dict = {'lrn_rate':1e-2,
                'max_test_acc':0}
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompRes/mnistCmpResn4.txt')
-mnist = input_data.read_data_sets("MNIST_DATA/", one_hot=True)
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompRes/mnistCmpResn9.txt')
+mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
 
 def startTrain(trainepochnums, hps, mode, gps):
@@ -191,13 +190,13 @@ def batch_imgs_reshape_and_agu(batch_imgs,hps):
 def main():
     hps = HParams(batch_nums=50,
                   num_classes=10,
-                  deep_net_fkn=30,
+                  deep_net_fkn=24,
                   img_depth=1,
                   img_width=28,
-                  deepk=[2.6, 2.6, 2.4, 2],
+                  deepk=[2.2, 2.2, 2.2, 2.1],
                   carriage_block_num=[2,2,2,2],
                   des_img_size=96,
-                  descrate=[0.7, 0.7, 0.8, 0.95])
+                  descrate=[0.95, 0.95, 0.95, 0.95])
 
     save_file_name = '/home/allen/work/variableSave/OCRpro1/temp/deepres.ckpy'
     des_save_dirname = '/home/allen/work/variableSave/OCRpro1/mnist/mnistCompRes'
@@ -223,17 +222,11 @@ def main():
         print("start training")
         mode = 'train'
         trainNumsBeforeValid = 4
-        # p = Process(target=startTrain,args=(trainNumsBeforeValid, hps, mode, gps))
-        # p.start()
-        # p.join()
         startTrain(trainNumsBeforeValid,hps,mode=mode,gps=gps)
         print("training end")
 
         print("start test")
         mode = 'test'
-        # p = Process(target=startTest, args=(hps, mode, gps, msg))
-        # p.start()
-        # p.join()
 
         startTest(hps,mode=mode, gps=gps, msg=msg)
 
