@@ -4,7 +4,8 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 from mnistCompRes.mnisttool import ModelUtilv3s1
 
-#
+# 方法一：卷积-BN-池化-激活，test-acc=0.9649
+# 方法二：卷积-BN-激活函数-池化,test-acc=0.9654
 #create data
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
