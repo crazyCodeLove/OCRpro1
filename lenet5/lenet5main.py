@@ -4,12 +4,13 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 from mnistCompRes.mnisttool import ModelUtilv3s1
 
+#
 #create data
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/lenet5/lenet4.txt')
-logDir = '/home/allen/work/data/resultlog/lenet5/summary/trainBN'
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/lenet5/lenet5.txt')
+logDir = '/home/allen/work/data/resultlog/lenet5/summary/trainBN_cor'
 
 #set global features
 img_size = 28
@@ -48,13 +49,13 @@ with tf.variable_scope(cl1_layer_name):
     conv1 = tf.nn.conv2d(xp_reshape,conv1_weight,strides=[1,1,1,1],padding='SAME')
     layer1_conv = tf.nn.bias_add(conv1,conv1_biases)
     layer1_conv = tf.layers.batch_normalization(layer1_conv,axis=0,training=in_training)
+    layer1_conv = activate_func(layer1_conv)
 
 cl2_layer_name='layer2'
 cl2_kernal = 2
 # 14*14*6
 with tf.variable_scope(cl2_layer_name):
     layer2_pool = tf.nn.avg_pool(layer1_conv,[1,cl2_kernal,cl2_kernal,1],strides=[1,2,2,1],padding='SAME')
-    layer2_pool = activate_func(layer2_pool)
 
 
 cl3_kernal = 5
@@ -70,6 +71,7 @@ with tf.variable_scope(cl3_layer_name):
     conv3 = tf.nn.conv2d(layer2_pool,conv3_weight,strides=[1,1,1,1],padding='VALID')
     layer3_conv = tf.nn.bias_add(conv3,conv3_biases)
     layer3_conv = tf.layers.batch_normalization(layer3_conv, axis=0, training=in_training)
+    layer3_conv = activate_func(layer3_conv)
 
 
 cl4_layer_name='layer4'
@@ -77,7 +79,6 @@ cl4_kernal = 2
 # 5*5*16
 with tf.variable_scope(cl4_layer_name):
     layer4_pool = tf.nn.avg_pool(layer3_conv,[1,cl4_kernal,cl4_kernal,1],strides=[1,2,2,1],padding='SAME')
-    layer4_pool = activate_func(layer4_pool)
 
 cl5_kernal = 5
 cl5_in_depth = cl3_out_depth
@@ -92,6 +93,7 @@ with tf.variable_scope(cl5_layer_name):
     conv5 = tf.nn.conv2d(layer4_pool,conv5_weight,strides=[1,1,1,1],padding='VALID')
     layer5_conv = tf.nn.bias_add(conv5,conv5_biases)
     layer5_conv = tf.layers.batch_normalization(layer5_conv, axis=0, training=in_training)
+    layer5_conv = activate_func(layer5_conv)
 
 
 
@@ -129,41 +131,41 @@ train_writer = tf.summary.FileWriter(logDir)
 test_acc = 0
 is_saved = False
 while test_acc < 1:
-    # with tf.Session() as sess:
-    #     if is_saved:
-    #         saver.restore(sess,save_file)
-    #     else:
-    #         sess.run(init)
-    #     train_x, train_y = mnist.train.next_batch(batch_size)
-    #     sess.run([loss, outputs, train_step, global_steps], feed_dict={xp: train_x, yp: train_y, keep_prob: 1, in_training:True})
-    #     step = sess.run(global_steps)
-    #
-    #     while(step%train_nums!=0):
-    #         train_x, train_y = mnist.train.next_batch(batch_size)
-    #         lo, ou, _ , step, summary= sess.run([loss, outputs, train_step, global_steps, merged], feed_dict={xp: train_x, yp: train_y, keep_prob: 1,in_training:True})
-    #
-    #         if step % 500 == 0:
-    #             train_writer.add_summary(summary,step)
-    #
-    #             # trainacc = ModelUtilv3s1.get_accurate(ou, train_y)
-    #             # msg = "trainstep:%5d  loss:%e  train acc:%.5f" % (step, lo, trainacc)
-    #             # logger.showAndLogMsg(msg)
-    #
-    #     saver.save(sess, save_file)
-    #     is_saved = True
-    #     print('train end ' + str(step))
-
     with tf.Session() as sess:
-        saver.restore(sess, save_file)
-        allrightnums = 0
-        for i in range(200):
-            test_x, test_y = mnist.test.next_batch(50)
-            outs = sess.run(outputs, feed_dict={xp: test_x, yp: test_y, keep_prob: 1,in_training:False})
+        if is_saved:
+            saver.restore(sess,save_file)
+        else:
+            sess.run(init)
+        train_x, train_y = mnist.train.next_batch(batch_size)
+        sess.run([loss, outputs, train_step, global_steps], feed_dict={xp: train_x, yp: train_y, keep_prob: 1, in_training:True})
+        step = sess.run(global_steps)
 
-            itrightnums = ModelUtilv3s1.get_test_right_num(outs, test_y)
-            allrightnums += itrightnums
+        while(step%train_nums!=0):
+            train_x, train_y = mnist.train.next_batch(batch_size)
+            lo, ou, _ , step, summary= sess.run([loss, outputs, train_step, global_steps, merged], feed_dict={xp: train_x, yp: train_y, keep_prob: 1,in_training:True})
 
-        test_acc = float(allrightnums) / 10000
-        # tf.summary.scalar('test acc',test_acc)
-        msg = "test acc:%.5f" % (test_acc)
-        logger.showAndLogMsg(msg)
+            if step % 500 == 0:
+                train_writer.add_summary(summary,step)
+
+                # trainacc = ModelUtilv3s1.get_accurate(ou, train_y)
+                # msg = "trainstep:%5d  loss:%e  train acc:%.5f" % (step, lo, trainacc)
+                # logger.showAndLogMsg(msg)
+
+        saver.save(sess, save_file)
+        is_saved = True
+        print('train end ' + str(step))
+
+    # with tf.Session() as sess:
+    #     saver.restore(sess, save_file)
+    #     allrightnums = 0
+    #     for i in range(200):
+    #         test_x, test_y = mnist.test.next_batch(50)
+    #         outs = sess.run(outputs, feed_dict={xp: test_x, yp: test_y, keep_prob: 1,in_training:False})
+    #
+    #         itrightnums = ModelUtilv3s1.get_test_right_num(outs, test_y)
+    #         allrightnums += itrightnums
+    #
+    #     test_acc = float(allrightnums) / 10000
+    #     # tf.summary.scalar('test acc',test_acc)
+    #     msg = "test acc:%.5f" % (test_acc)
+    #     logger.showAndLogMsg(msg)
