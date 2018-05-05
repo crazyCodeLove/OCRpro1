@@ -26,14 +26,14 @@ save_file = "/home/allen/work/variableSave/lenet5/lenet1.ckpt"
 learning_rate = 1e-4
 
 activate_func = tf.nn.relu
-
+in_training = tf.placeholder(tf.bool)
 #create graph
     #set conv layer 1 features
 xp = tf.placeholder(tf.float32,[batch_size,img_size*img_size*img_depth])
 xp_reshape = tf.reshape(xp,[-1,img_size,img_size,img_depth])
 
 yp = tf.placeholder(tf.float32,[None,10])
-in_training = tf.placeholder(tf.bool)
+
 
 cl1_kernal = 5
 cl1_in_depth = img_depth
@@ -129,32 +129,31 @@ train_writer = tf.summary.FileWriter(logDir)
 test_acc = 0
 is_saved = False
 while test_acc < 1:
+    # with tf.Session() as sess:
+    #     if is_saved:
+    #         saver.restore(sess,save_file)
+    #     else:
+    #         sess.run(init)
+    #     train_x, train_y = mnist.train.next_batch(batch_size)
+    #     sess.run([loss, outputs, train_step, global_steps], feed_dict={xp: train_x, yp: train_y, keep_prob: 1, in_training:True})
+    #     step = sess.run(global_steps)
+    #
+    #     while(step%train_nums!=0):
+    #         train_x, train_y = mnist.train.next_batch(batch_size)
+    #         lo, ou, _ , step, summary= sess.run([loss, outputs, train_step, global_steps, merged], feed_dict={xp: train_x, yp: train_y, keep_prob: 1,in_training:True})
+    #
+    #         if step % 500 == 0:
+    #             train_writer.add_summary(summary,step)
+    #
+    #             # trainacc = ModelUtilv3s1.get_accurate(ou, train_y)
+    #             # msg = "trainstep:%5d  loss:%e  train acc:%.5f" % (step, lo, trainacc)
+    #             # logger.showAndLogMsg(msg)
+    #
+    #     saver.save(sess, save_file)
+    #     is_saved = True
+    #     print('train end ' + str(step))
+
     with tf.Session() as sess:
-        # if is_saved:
-        #     saver.restore(sess,save_file)
-        # else:
-        #     sess.run(init)
-        # train_x, train_y = mnist.train.next_batch(batch_size)
-        # sess.run([loss, outputs, train_step, global_steps], feed_dict={xp: train_x, yp: train_y, keep_prob: 1, in_training:True})
-        # step = sess.run(global_steps)
-        #
-        # while(step%train_nums!=0):
-        #     train_x, train_y = mnist.train.next_batch(batch_size)
-        #     lo, ou, _ , step, summary= sess.run([loss, outputs, train_step, global_steps, merged], feed_dict={xp: train_x, yp: train_y, keep_prob: 1,in_training:True})
-        #
-        #     if step % 500 == 0:
-        #         train_writer.add_summary(summary,step)
-        #
-        #         # trainacc = ModelUtilv3s1.get_accurate(ou, train_y)
-        #         # msg = "trainstep:%5d  loss:%e  train acc:%.5f" % (step, lo, trainacc)
-        #         # logger.showAndLogMsg(msg)
-        #
-        # saver.save(sess, save_file)
-        # is_saved = True
-        # print('train end ' + str(step))
-
-
-
         saver.restore(sess, save_file)
         allrightnums = 0
         for i in range(200):
