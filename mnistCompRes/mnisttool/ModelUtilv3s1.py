@@ -90,7 +90,6 @@ def add_fc_layer(
         return outputs
 
 
-
 def add_building_block_carriage(batch_num,deepk, carriage_nums, inputs, kernalWidth,
                                 is_training_ph, scope=None, layername="layer",
                                 activateFunc=tf.nn.relu, stride=[1, 1, 1, 1]):
@@ -294,8 +293,8 @@ def randomized_relu(X, mode = 'train', name="RandomizedRelu"):
 
 
 def down_learning_rate(test_acc, lr):
-    if lr <= 5e-5:
-        return 5e-5
+    if lr <= 9e-5:
+        return 9e-5
 
     if test_acc >= 0.8 :
         lr /= 5.0
