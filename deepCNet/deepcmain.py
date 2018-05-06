@@ -13,7 +13,7 @@ HParams = namedtuple('HParams',
 
 
 logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet1.txt')
-logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepc50'
+logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepc100'
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 save_file = "/home/allen/work/variableSave/deepcnet/deepcnet.ckpt"
 peizhi_filename = "/home/allen/work/chengxu/OCR/OCRpro1/deepCNet/peizhi.xml"
@@ -67,12 +67,13 @@ def startTrain(hps, mode):
                     feed_dict=feed_dict)
                 trainacc = ModelUtilv3s1.get_accurate(outprediction, inlabels)
                 msg = "trainstep:%5d  loss:%e  train acc:%.5f"%(itstep, cost, trainacc)
+                logger.log_message(msg)
 
                 if itstep % 200 ==0:
-                    logger.showAndLogMsg(msg)
                     train_writer.add_summary(summary, itstep)
-                else:
-                    logger.log_message(msg)
+                if itstep % 500 == 0:
+                    logger.showAndLogMsg(msg)
+
 
         print("before save")
 

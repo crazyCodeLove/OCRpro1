@@ -150,7 +150,7 @@ class DeepCModel(object):
         fcl1_inputs, fcl1_in_features = conv2fc(resnet)
         # set outputs features
         outputs_features = self.hps.num_classes
-        outputs = tf.layers.dense(fcl1_inputs,outputs_features,activation=self.activateFunction)
+        outputs = tf.layers.dense(fcl1_inputs,outputs_features)
 
         correct_prediction = tf.equal(tf.argmax(outputs, axis=1), tf.argmax(self.labes, axis=1))
         train_accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
