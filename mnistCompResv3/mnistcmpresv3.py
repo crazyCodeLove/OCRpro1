@@ -23,7 +23,7 @@ HParams = namedtuple('HParams',
 GParams = namedtuple('GParams',
                      'save_file_name, des_save_dirname, save_dirname, peizhi_filename')
 
-peizhi_dict = {'lrn_rate':1e-2,
+peizhi_dict = {'lrn_rate':1e-3,
                'is_restore':False,
                'train_step':0,
                'test_step':0,
@@ -111,7 +111,6 @@ def startTest(hps, mode, gps):
     allrightnums = 0
     with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
         saver = tf.train.Saver()
-
         saver.restore(sess=sess, save_path=gps.save_file_name)
 
         with open(gps.peizhi_filename,mode='rb') as rfobj:
@@ -144,9 +143,7 @@ def startTest(hps, mode, gps):
             ModelUtilv3s1.update_peizhi(gps.peizhi_filename,'max_test_acc',test_acc)
             ModelUtilv3s1.move_variable_from_src2des(gps.save_dirname, gps.des_save_dirname)
 
-
         msg = "test acc:%.5f         now learning rate:%f"%(test_acc,lrn_rate)
-
         logger.showAndLogMsg(msg)
 
 
@@ -161,8 +158,6 @@ def batch_imgs_process_test(batch_imgs, hps):
     batch_imgs = imgUtil.batch_imgs_reshape(batch_imgs, hps)
     batch_imgs = imgUtil.batch_imgs_resize(batch_imgs, hps.des_img_size, hps)
     return batch_imgs
-
-
 
 
 def batch_imgs_reshape_and_agu(batch_imgs,hps):
@@ -190,7 +185,7 @@ def main():
                   descrate=[0.6, 0.6, 0.6, 0.7])
 
     save_file_name = '/home/allen/work/variableSave/OCRpro1/temp/deepres.ckpy'
-    des_save_dirname = '/home/allen/work/variableSave/OCRpro1/mnist/compresv3'
+    des_save_dirname = '/home/allen/work/variableSave/OCRpro1/compresv3'
     save_dirname = '/home/allen/work/variableSave/OCRpro1/temp/'
 
     gps = GParams(save_file_name=save_file_name,
@@ -212,21 +207,21 @@ def main():
         print("start training")
         mode = 'train'
         trainnums = 10000
-        startTrain(trainnums,hps,mode=mode,gps=gps)
+        startTrain(trainnums, hps, mode=mode, gps=gps)
         print("training end")
+
 
         print("start test")
         mode = 'test'
-
         startTest(hps,mode=mode, gps=gps)
-
         print("test end")
-
         with open(gps.peizhi_filename, mode='rb') as rfobj:
             peizhi = pickle.load(rfobj)
         if peizhi['max_test_acc'] >= 0.999:
             print("already over best test acc, now test acc is ", peizhi['max_test_acc'])
             break
+
+
 
 
 if __name__ == "__main__":
