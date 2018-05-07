@@ -31,7 +31,7 @@ peizhi_dict = {'lrn_rate':1e-2,
                'max_test_acc':0}
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompRes/mnistCmpResn9.txt')
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompRes/mnistCmpResn10.txt')
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
 
@@ -190,13 +190,13 @@ def batch_imgs_reshape_and_agu(batch_imgs,hps):
 def main():
     hps = HParams(batch_nums=50,
                   num_classes=10,
-                  deep_net_fkn=24,
+                  deep_net_fkn=50,
                   img_depth=1,
                   img_width=28,
-                  deepk=[2.2, 2.2, 2.2, 2.1],
+                  deepk=[1.5, 1.5, 2, 2],
                   carriage_block_num=[2,2,2,2],
-                  des_img_size=96,
-                  descrate=[0.95, 0.95, 0.95, 0.95])
+                  des_img_size=48,
+                  descrate=[0.9, 0.9, 0.95, 0.95])
 
     save_file_name = '/home/allen/work/variableSave/OCRpro1/temp/deepres.ckpy'
     des_save_dirname = '/home/allen/work/variableSave/OCRpro1/mnist/mnistCompRes'
@@ -214,7 +214,7 @@ def main():
     msg = "peizhi\nhps:"+str(hps) +\
           "\ngps:"+str(gps)+ \
           "\n max pool"+\
-          "deepk and descrate can be fractional, descrate=0.6  use Relu, "+ \
+          "deepk and descrate can be fractional, use Relu, "+ \
           "\nimg random crop scale rotate"
     logger.showAndLogMsg(msg)
 

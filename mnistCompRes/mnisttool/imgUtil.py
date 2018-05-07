@@ -74,11 +74,6 @@ def batch_imgs_aug(batch_imgs, is_arrange_0_to_1 = True):
 
     result = np.zeros(batch_imgs.shape, dtype=oldtype)
 
-    # if is_arrange_0_to_1:
-    #     batch_imgs = np.array((batch_imgs * 255), dtype=np.uint8)
-    # else:
-    #     batch_imgs = np.array(batch_imgs, dtype=np.uint8)
-
     for it in range(batch_imgs.shape[0]):
         img = batch_imgs[it]
         img = single_image_aug_gray(img)
@@ -114,9 +109,8 @@ def single_image_aug_gray(img):
         else:
             img = np.reshape(img,newshape=(ori_shape[0],ori_shape[1]))
 
-
     # random crop
-    crop_range = (0, 2)
+    crop_range = (0, 4)
 
     top = np.random.randint(*crop_range)
     left = np.random.randint(*crop_range)
@@ -125,7 +119,7 @@ def single_image_aug_gray(img):
     result = util.crop(img,crop_width=((top,left),(bottom,right)))
 
     # random scale
-    scale_range = (0.9,1.1)
+    scale_range = (0.7, 1.2)
     scale_x = np.random.uniform(*scale_range)
     scale_y = np.random.uniform(*scale_range)
     result = rescale(result,scale=(scale_x,scale_y))
@@ -134,7 +128,7 @@ def single_image_aug_gray(img):
     result = resize(result,output_shape=(ori_shape[0],ori_shape[1]))
 
     # random rotate
-    rotate_range = (-15,15)
+    rotate_range = (-20,20)
     rotate_angle = np.random.randint(*rotate_range)
     result = rotate(result,angle=rotate_angle)
 
@@ -159,9 +153,9 @@ def show_image(img):
 
 def main():
     camera = data.camera()
-    rescale_camera = rescale(camera, scale=0.1)
-    resize_camera = resize(camera,output_shape=(500,500))
-    newcamera = rotate(camera,15)
+    # rescale_camera = rescale(camera, scale=0.1)
+    # resize_camera = resize(camera,output_shape=(500,500))
+    # newcamera = rotate(camera,15)
     # crop_width=((top,left),(bottom,right))
     # crop_right_camera = util.crop(camera,crop_width=((0,0),(0,150)))
     # crop_left_camera = util.crop(camera,crop_width=((0,150),(0,0)))
@@ -171,25 +165,22 @@ def main():
     #
     # tform = AffineTransform(shear=0.8, rotation=90)
     # sh_ro8 = warp(camera, inverse_map=tform, output_shape=(512, 512))
-    #
-    # tform = AffineTransform(shear=0.9, rotation=90)
-    # sh_ro9 = warp(camera, inverse_map=tform, output_shape=(512, 512))
+    tform = AffineTransform(shear=-0.2,translation=(50,0))
+    sh_ro9 = warp(camera, inverse_map=tform.inverse, output_shape=(512, 512))
 
-    camera = util.random_noise(camera,mode='salt')
+    # camera = util.random_noise(camera,mode='salt')
 
 
-    fil_camer = rank.median(camera,selem=disk(3))
-    media_camer = rank.mean(camera,selem=disk(3))
+    # fil_camer = rank.median(camera,selem=disk(3))
+    # media_camer = rank.mean(camera,selem=disk(3))
 
 
 
     plt.figure()
     plt.subplot(2,2,1)
     plt.imshow(camera)
-    plt.subplot(2,2,2)
-    plt.imshow(fil_camer)
     plt.subplot(2, 2, 3)
-    plt.imshow(media_camer)
+    plt.imshow(sh_ro9)
 
     plt.show()
 
