@@ -9,9 +9,11 @@ from skimage import filters
 from skimage import feature
 from skimage import morphology
 
+from mnistCompRes.mnisttool import imgUtil
+
 from PIL import Image
 
-mnist = input_data.read_data_sets("MNIST_DATA/", one_hot=True)
+mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
 def get_single_img_label():
     '''
@@ -190,9 +192,6 @@ def gabor_filter():
         plt.show()
 
 def activate_function():
-
-
-
     plt.figure()
 
     ax = plt.subplot(3,2,1)
@@ -293,6 +292,21 @@ def aserialPic():
         plt.imshow(pic[i])
     plt.show()
 
+def img_aug():
+    gen = get_single_img_label()
+    for img, label in gen:
+        resize_img = resize_pic(img, [96, 96])
+
+        while True:
+        # for i in range(10):
+            obj = imgUtil.single_image_aug_gray(resize_img)
+            plt.figure()
+            plt.imshow(obj)
+            # plt.title(i)
+            plt.show()
+
+
+
 
 def strage_1():
     gen = get_single_img_label()
@@ -303,7 +317,6 @@ def strage_1():
         otsu_img = filters.threshold_otsu(medium_img)
         otsu_img = (medium_img > otsu_img)*1
         otsu_img = np.asanyarray(otsu_img, dtype=np.float32)
-
 
         plt.figure()
         plt.subplot(2,2,1)
@@ -331,7 +344,8 @@ def main():
     # same_number()
     # gabor_filter()
     # activate_function()
-    aserialPic()
+    # aserialPic()
+    img_aug()
 
 if __name__ == "__main__":
     main()
