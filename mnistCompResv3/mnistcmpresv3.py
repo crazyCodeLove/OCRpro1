@@ -30,8 +30,8 @@ peizhi_dict = {'lrn_rate':1e-3,
                'max_test_acc':0}
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompResv3/mnistCmpResn1.txt')
-logDir = '/home/allen/work/data/resultlog/mnistCompResv3/summary/cmpres1'
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompResv3/mnistCmpResn2.txt')
+logDir = '/home/allen/work/data/resultlog/mnistCompResv3/summary/cmpres2'
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
 
@@ -199,7 +199,7 @@ def main():
 
     msg = "peizhi\nhps:"+str(hps) +\
           "\ngps:"+str(gps)+ \
-          "\n overlay max pool "+\
+          "\n overlap max pool "+\
           "deepk and descrate can be fractional, use Relu, "
     logger.showAndLogMsg(msg)
 
