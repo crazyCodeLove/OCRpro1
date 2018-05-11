@@ -53,7 +53,7 @@ class MnistModel(object):
 
         outputs = inputs
         for it in range(len(carriage_block_num)):
-            outputs = ModelUtilv3s1.add_overlap_maxpool(outputs)
+            outputs = ModelUtilv3s1.add_maxpool_layer(outputs)
 
             tscope = "carriage_" + str(it)
             outputs = ModelUtilv3s1.add_building_block_carriage(

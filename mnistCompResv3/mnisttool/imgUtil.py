@@ -165,7 +165,7 @@ def main():
     #
     # tform = AffineTransform(shear=0.8, rotation=90)
     # sh_ro8 = warp(camera, inverse_map=tform, output_shape=(512, 512))
-    tform = AffineTransform(shear=-0.2,translation=(50,0))
+    tform = AffineTransform(scale=(0.9,0.9),shear=0.1,translation=(50,0))
     sh_ro9 = warp(camera, inverse_map=tform.inverse, output_shape=(512, 512))
 
     # camera = util.random_noise(camera,mode='salt')

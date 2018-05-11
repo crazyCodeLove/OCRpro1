@@ -30,8 +30,8 @@ peizhi_dict = {'lrn_rate':1e-3,
                'max_test_acc':0}
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompResv3/mnistCmpResn2.txt')
-logDir = '/home/allen/work/data/resultlog/mnistCompResv3/summary/cmpres2'
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompResv3/mnistCmpResn3.txt')
+logDir = '/home/allen/work/data/resultlog/mnistCompResv3/summary/cmpres3'
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
 
@@ -182,10 +182,10 @@ def main():
                   deepk=[2.8, 2.8, 2.8, 2.7],
                   carriage_block_num=[2,2,2,2],
                   des_img_size=96,
-                  descrate=[0.6, 0.6, 0.6, 0.6])
+                  descrate=[0.6, 0.6, 0.6, 0.8])
 
     save_file_name = '/home/allen/work/variableSave/OCRpro1/temp/deepres.ckpy'
-    des_save_dirname = '/home/allen/work/variableSave/OCRpro1/compresv3'
+    des_save_dirname = '/home/allen/work/variableSave/OCRpro1/compres'
     save_dirname = '/home/allen/work/variableSave/OCRpro1/temp/'
 
     gps = GParams(save_file_name=save_file_name,
