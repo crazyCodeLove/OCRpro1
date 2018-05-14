@@ -12,13 +12,14 @@ HParams = namedtuple('HParams',
                      'img_depth, img_width, des_img_size')
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet1.txt')
-logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepc100'
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet9.txt')
+logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepcs96f50BN3'
+
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 save_file = "/home/allen/work/variableSave/deepcnet/deepcnet.ckpt"
 peizhi_filename = "/home/allen/work/chengxu/OCR/OCRpro1/deepCNet/peizhi.xml"
 
-peizhi_dict = {'lrn_rate':1e-2,
+peizhi_dict = {'lrn_rate':1e-3,
                'is_restore':False,
                'train_step':0,
                'max_test_acc':0}
@@ -43,7 +44,7 @@ def startTrain(hps, mode):
             saver.restore(sess, save_file)
 
         base_step = sess.run(model.step)
-        end_step = int(base_step + 10000)
+        end_step = int(base_step + 10000 + 1)
         for itstep in range(base_step,end_step):
             if (itstep%10) <= 8:
                 images,labels = mnist.train.next_batch(hps.batch_nums)
@@ -68,9 +69,8 @@ def startTrain(hps, mode):
                 trainacc = ModelUtilv3s1.get_accurate(outprediction, inlabels)
                 msg = "trainstep:%5d  loss:%e  train acc:%.5f"%(itstep, cost, trainacc)
                 logger.log_message(msg)
+                train_writer.add_summary(summary, itstep)
 
-                if itstep % 200 ==0:
-                    train_writer.add_summary(summary, itstep)
                 if itstep % 500 == 0:
                     logger.showAndLogMsg(msg)
 
@@ -139,7 +139,7 @@ def batch_imgs_process(batch_imgs, hps):
 def main():
     hps = HParams(batch_nums=50,
                   num_classes=10,
-                  deep_net_fkn=50,
+                  deep_net_fkn=100,
                   img_depth=1,
                   img_width=28,
                   des_img_size=96
