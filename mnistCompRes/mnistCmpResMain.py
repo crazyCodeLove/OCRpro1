@@ -31,7 +31,7 @@ peizhi_dict = {'lrn_rate':1e-2,
                'max_test_acc':0}
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompRes/mnistCmpResn10.txt')
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/mnistCompRes/mnistCmpResn12.txt')
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
 
@@ -39,7 +39,7 @@ def startTrain(trainepochnums, hps, mode, gps):
     # images,labels = mnist.train.next_batch(hps.batch_nums)
     tf.reset_default_graph()
 
-    xp = tf.placeholder(tf.float32, [None, hps.des_img_size, hps.des_img_size, hps.img_depth])
+    xp = tf.placeholder(tf.float32, [hps.batch_nums, hps.des_img_size, hps.des_img_size, hps.img_depth])
     yp = tf.placeholder(tf.float32, [None, 10])
     model = mnistModel.MnistModel(hps, xp, yp, mode)
     model.create_graph()
@@ -103,7 +103,7 @@ def startTest(hps, mode, gps, msg):
     # images, labels = mnist.test.next_batch(hps.batch_nums)
     tf.reset_default_graph()
 
-    xp = tf.placeholder(tf.float32, [None, hps.des_img_size, hps.des_img_size, hps.img_depth])
+    xp = tf.placeholder(tf.float32, [hps.batch_nums, hps.des_img_size, hps.des_img_size, hps.img_depth])
     yp = tf.placeholder(tf.float32, [None, 10])
 
     model = mnistModel.MnistModel(hps, xp, yp, mode)
@@ -190,13 +190,13 @@ def batch_imgs_reshape_and_agu(batch_imgs,hps):
 def main():
     hps = HParams(batch_nums=50,
                   num_classes=10,
-                  deep_net_fkn=50,
+                  deep_net_fkn=30,
                   img_depth=1,
                   img_width=28,
-                  deepk=[1.5, 1.5, 2, 2],
+                  deepk=[3, 2.9, 2.8, 2.8],
                   carriage_block_num=[2,2,2,2],
-                  des_img_size=48,
-                  descrate=[0.9, 0.9, 0.95, 0.95])
+                  des_img_size=96,
+                  descrate=[0.6, 0.6, 0.6, 0.6])
 
     save_file_name = '/home/allen/work/variableSave/OCRpro1/temp/deepres.ckpy'
     des_save_dirname = '/home/allen/work/variableSave/OCRpro1/mnist/mnistCompRes'

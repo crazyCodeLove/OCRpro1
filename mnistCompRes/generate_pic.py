@@ -342,7 +342,7 @@ def main():
     # canny_filter()
     # skeleton_retrive()
     # same_number()
-    # gabor_filter()
+    gabor_filter()
     # activate_function()
     # aserialPic()
     img_aug()

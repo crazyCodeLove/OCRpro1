@@ -12,12 +12,15 @@ test data 100 class, character number is:  14202
 train data 100 class, character number is: 56987
 
 """
-import logging,os,pickle
-import shutil
-import tensorflow as tf
-from tensorflow.contrib.layers.python.layers.layers import batch_norm
-import numpy as np
+import logging
+import os
+import pickle
 import random
+import shutil
+
+import numpy as np
+import tensorflow as tf
+
 
 class MyLog(object):
     logfile = ""
@@ -75,19 +78,6 @@ def get_accurate(prediction,labels):
 def get_test_right_num(prediction,labels):
     return np.sum(np.equal(np.argmax(prediction,axis=1),np.argmax(labels,axis=1)))
 
-def add_fc_layer(
-        inputs, inFeatures, outFeatures, layerName="layer", activateFunc=None):
-    with tf.name_scope(layerName):
-        Weights = tf.Variable(tf.truncated_normal([inFeatures, outFeatures], stddev=0.1))
-        biases = tf.Variable(tf.constant(0.1, tf.float32, [outFeatures]))
-
-        y = tf.matmul(inputs,Weights) + biases
-        if activateFunc is None:
-            outputs = y
-        else:
-            outputs = activateFunc(y)
-
-        return outputs
 
 
 def add_building_block_carriage(batch_num,deepk, carriage_nums, inputs, kernalWidth,
@@ -180,7 +170,7 @@ def building_block_same(inputs,kernalWidth,
     return outputs
 
 def building_block_desc(inputs,is_training_ph, scope=None, layername="layer",
-                        activateFunc=None, stride=[1, 1, 1, 1],
+                        activateFunc=tf.nn.relu, stride=[1, 1, 1, 1],
                         descrate=1):
     """
     conv layer:1
@@ -189,40 +179,31 @@ def building_block_desc(inputs,is_training_ph, scope=None, layername="layer",
 
     inDepth = inputs.get_shape().as_list()[3]
     outDepth = int(inDepth*descrate)
-    tscope = scope + "layer1"
+    layername = scope + "bn"
 
     kw=1
-    outputs = add_BN_conv_layer(inputs,kw,outDepth,is_training_ph,
-                                tscope,layername=layername,activateFunc=activateFunc,
-                                stride=stride)
+    with tf.variable_scope(layername):
+        weights = tf.get_variable('weights',
+                                  [kw, kw, inDepth, outDepth],
+                                  initializer=tf.initializers.truncated_normal(stddev=0.1))
+        biases = tf.get_variable('biases',[outDepth])
+        conv1 = tf.nn.conv2d(inputs, weights, strides=stride, padding='SAME')
+        outputs = tf.nn.bias_add(conv1, biases)
+        outputs = activateFunc(outputs)
     return outputs
 
 
 def add_BN_conv_layer(inputs, kernalWidth, outDepth,
                       is_training_ph, scope , layername="layer",
                       activateFunc=tf.nn.relu, stride=[1, 1, 1, 1]):
-
     inDepth = inputs.get_shape().as_list()[3]
-
     with tf.name_scope(layername):
         n = kernalWidth * kernalWidth * outDepth
         Weights = tf.Variable(tf.truncated_normal([kernalWidth, kernalWidth, inDepth, outDepth], stddev=np.sqrt(2.0/n)))
-        biases = tf.Variable(tf.constant(0.1, tf.float32, [outDepth]))
+        # biases = tf.Variable(tf.constant(0.1, tf.float32, [outDepth]))
 
-        y1 = tf.nn.conv2d(inputs, Weights, stride, padding='SAME') + biases
-
-
-        outputs = tf.cond(is_training_ph,
-                           lambda: batch_norm(y1,decay=0.94, is_training=True,
-                                              center=False, scale=True,
-                                              activation_fn=activateFunc,
-                                              updates_collections=None, scope=scope),
-                           lambda: batch_norm(y1,decay=0.94, is_training=False,
-                                              center=False, scale=True,
-                                              activation_fn=activateFunc,
-                                              updates_collections=None, scope=scope,
-                                              reuse=True))
-
+        y1 = tf.nn.conv2d(inputs, Weights, stride, padding='SAME')
+        outputs = tf.layers.batch_normalization(y1,axis=0,training=is_training_ph)
         return outputs
 
 def add_overlap_maxpool(inputs,kernal=3,step=2,layername="poollayer"):

@@ -74,7 +74,7 @@ class MnistModel(object):
             tscope = "carriage" + str(it) + "des"
             outputs = ModelUtilv3s1.building_block_desc(
                 outputs, is_training_ph, scope=tscope, layername=layername,
-                activateFunc=None, stride=stride, descrate=self.hps.descrate[it])
+                activateFunc=activateFunc, stride=stride, descrate=self.hps.descrate[it])
             ###################3
             # print outputs.get_shape().as_list()
             ############33333333333333
@@ -107,8 +107,7 @@ class MnistModel(object):
         fcl1_inputs, fcl1_in_features = ModelUtilv3s1.conv2fc(resnet)
         # set outputs features
         outputs_features = self.hps.num_classes
-        outputs = ModelUtilv3s1.add_fc_layer(fcl1_inputs, fcl1_in_features,
-                                                         outputs_features)
+        outputs = tf.layers.dense(fcl1_inputs,outputs_features)
 
         self.predictions = tf.nn.softmax(logits=outputs)
 
