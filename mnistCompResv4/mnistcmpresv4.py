@@ -58,7 +58,6 @@ def startTrain(trainnums, hps, mode, gps):
 
         base_step = int(peizhi['train_step'])
         end_step = int(base_step + trainnums +1)
-        # end_step = int(base_step + 5000*trainepochnums / hps.batch_nums +1)
         for itstep in range(base_step,end_step):
             if (itstep%10) <= 8:
                 images,labels = mnist.train.next_batch(hps.batch_nums)
@@ -100,7 +99,7 @@ def startTrain(trainnums, hps, mode, gps):
 def startTest(hps, mode, gps):
     tf.reset_default_graph()
 
-    xp = tf.placeholder(tf.float32, [None, hps.des_img_size, hps.des_img_size, hps.img_depth])
+    xp = tf.placeholder(tf.float32, [None, hps.des_img_size, hps.des_img_size, 9])
     yp = tf.placeholder(tf.float32, [None, 10])
 
     model = mnistModel.MnistModel(hps, xp, yp, mode)
