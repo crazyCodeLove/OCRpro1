@@ -13,6 +13,7 @@ from skimage import color
 from skimage.morphology import disk
 from skimage import util
 from matplotlib import pyplot as plt
+from skimage import filters
 
 
 def batch_imgs_resize(batch_imgs, des_img_size, hps):
@@ -61,6 +62,34 @@ def single_img_resize(img, img_size, des_img_size, pad_width=6):
     img = np.reshape(img, [des_img_size,des_img_size,img_depth])
     return img
 
+
+def batch_imgs_pre_process(batch_imgs):
+    oldtype = batch_imgs.dtype
+    tsp = batch_imgs.shape
+    new_shape = (tsp[0],tsp[1],tsp[2],9)
+    result = np.zeros(new_shape, dtype=oldtype)
+
+    for it in range(batch_imgs.shape[0]):
+        img = batch_imgs[it]
+        img = single_img_pre_process(img)
+        result[it] = img
+
+    return result
+
+
+def single_img_pre_process(img):
+    ori_shape = img.shape
+    ori_dtype = img.dtype
+
+    img = np.reshape(img, newshape=(ori_shape[0], ori_shape[1]))
+    gab = [img,]
+    for i in range(8):
+        gabor_real, gabor_virt = filters.gabor(img, frequency=0.8, theta=i*22.5)
+        gab.append(gabor_real)
+
+    result = np.stack(gab,axis=2)
+    result = result.astype(dtype=ori_dtype)
+    return result
 
 def batch_imgs_aug(batch_imgs, is_arrange_0_to_1 = True):
     """
