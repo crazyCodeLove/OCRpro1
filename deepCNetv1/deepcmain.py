@@ -9,15 +9,15 @@ from deepCNet.modelUtil import deepcnetModel
 
 HParams = namedtuple('HParams',
                      'batch_nums, num_classes, deep_net_fkn,'
-                     'img_depth, img_width, des_img_size')
+                     'img_depth, img_width, des_img_size, filter_in_channel')
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet9.txt')
-logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepcs96f50BN3'
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet11.txt')
+logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepcs96f100gabor2'
 
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 save_file = "/home/allen/work/variableSave/deepcnet/deepcnet.ckpt"
-peizhi_filename = "/home/allen/work/chengxu/OCR/OCRpro1/deepCNet/peizhi.xml"
+peizhi_filename = "/home/allen/work/chengxu/OCR/OCRpro1/deepCNetv1/peizhi.xml"
 
 peizhi_dict = {'lrn_rate':1e-3,
                'is_restore':False,
@@ -31,7 +31,7 @@ def startTrain(hps, mode):
     with open(peizhi_filename, mode='rb') as rfobj:
         peizhi = pickle.load(rfobj)
 
-    xp = tf.placeholder(tf.float32, [hps.batch_nums, hps.des_img_size, hps.des_img_size, hps.img_depth])
+    xp = tf.placeholder(tf.float32, [hps.batch_nums, hps.des_img_size, hps.des_img_size, hps.filter_in_channel])
     yp = tf.placeholder(tf.float32, [None, 10])
     model = deepcnetModel.DeepCModel(hps, xp, yp, mode, peizhi['train_step'])
     model.create_graph()
@@ -69,11 +69,13 @@ def startTrain(hps, mode):
                     feed_dict=feed_dict)
                 trainacc = ModelUtilv3s1.get_accurate(outprediction, inlabels)
                 msg = "trainstep:%5d  loss:%e  train acc:%.5f"%(itstep, cost, trainacc)
-                logger.log_message(msg)
+
                 train_writer.add_summary(summary, itstep)
 
                 if itstep % 500 == 0:
                     logger.showAndLogMsg(msg)
+                else:
+                    logger.log_message(msg)
 
 
         print("before save")
@@ -90,7 +92,7 @@ def startTest(hps, mode):
         peizhi = pickle.load(rfobj)
     lrn_rate = peizhi['lrn_rate']
 
-    xp = tf.placeholder(tf.float32, [hps.batch_nums, hps.des_img_size, hps.des_img_size, hps.img_depth])
+    xp = tf.placeholder(tf.float32, [hps.batch_nums, hps.des_img_size, hps.des_img_size, hps.filter_in_channel])
     yp = tf.placeholder(tf.float32, [None, 10])
 
     model = deepcnetModel.DeepCModel(hps, xp, yp, mode, peizhi['train_step'])
@@ -141,10 +143,11 @@ def batch_imgs_process(batch_imgs, hps):
 def main():
     hps = HParams(batch_nums=50,
                   num_classes=10,
-                  deep_net_fkn=100,
+                  deep_net_fkn=50,
                   img_depth=1,
                   img_width=28,
-                  des_img_size=96
+                  des_img_size=96,
+                  filter_in_channel=4
                   )
     ModelUtilv3s1.init_peizhi(
         peizhifilename=peizhi_filename, peizhidict=peizhi_dict)
