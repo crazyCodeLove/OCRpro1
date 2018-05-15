@@ -8,7 +8,7 @@ def conv2fc(inputs):
 
 class DeepCModel(object):
 
-    def __init__(self,hps,images,labels, mode, init_step):
+    def __init__(self, hps, images, labels, mode, init_step):
         self.hps = hps
         self._images = images
         self.labes = labels
@@ -18,6 +18,7 @@ class DeepCModel(object):
 
     def create_resnet(self, inputx, in_training, activateFunc=tf.nn.relu):
         # inputs:96
+        # inputx = tf.layers.batch_normalization(inputx, axis=0, training=in_training)
 
         cl1_kernal = 3
         cl1_in_depth = self.hps.filter_in_channel
@@ -29,9 +30,10 @@ class DeepCModel(object):
                                            [cl1_kernal, cl1_kernal, cl1_in_depth, cl1_out_depth],
                                            initializer=tf.truncated_normal_initializer(stddev=0.1))
             conv1_biases = tf.get_variable('bias', [cl1_out_depth])
+
             conv1 = tf.nn.conv2d(inputx, conv1_weight, strides=[1, 1, 1, 1], padding='VALID')
             layer1_conv = tf.nn.bias_add(conv1, conv1_biases)
-            # layer1_conv = tf.layers.batch_normalization(layer1_conv, axis=0, training=in_training)
+
             layer1_conv = activateFunc(layer1_conv)
 
         cl2_layer_name = 'layer2'
@@ -154,6 +156,7 @@ class DeepCModel(object):
 
         resnet = self.create_resnet(self._images, self.is_training_ph, activateFunc=self.activateFunction)
         fcl1_inputs, fcl1_in_features = conv2fc(resnet)
+
         # set outputs features
         outputs_features = self.hps.num_classes
         outputs = tf.layers.dense(fcl1_inputs, outputs_features)

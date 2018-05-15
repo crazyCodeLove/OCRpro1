@@ -12,8 +12,8 @@ HParams = namedtuple('HParams',
                      'img_depth, img_width, des_img_size, filter_in_channel')
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet11.txt')
-logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepcs96f100gabor2'
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet14.txt')
+logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepcs96f50gabor3'
 
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 save_file = "/home/allen/work/variableSave/deepcnet/deepcnet.ckpt"
@@ -35,6 +35,7 @@ def startTrain(hps, mode):
     yp = tf.placeholder(tf.float32, [None, 10])
     model = deepcnetModel.DeepCModel(hps, xp, yp, mode, peizhi['train_step'])
     model.create_graph()
+
 
     with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
         saver = tf.train.Saver()
@@ -151,6 +152,8 @@ def main():
                   )
     ModelUtilv3s1.init_peizhi(
         peizhifilename=peizhi_filename, peizhidict=peizhi_dict)
+    msg = "sobel filter, no batch normalization"
+    logger.showAndLogMsg(msg)
 
     while True:
         print("start training")
