@@ -12,8 +12,8 @@ from mnistCompRes.mnisttool import imgUtil
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/lenet5/lenet5.txt')
-logDir = '/home/allen/work/data/resultlog/lenet5/summary/trainBN_cor'
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/lenet5/lenetv1n1.txt')
+logDir = '/home/allen/work/data/resultlog/lenet5/summary/traingabor1'
 
 def batch_imgs_process(batch_imgs):
     batch_imgs = np.reshape(batch_imgs, [-1, 28, 28, 1])
@@ -30,7 +30,7 @@ global_steps = tf.Variable(0, trainable=False)
 
 # tf.reset_default_graph()
 keep_prob = tf.placeholder(tf.float32)
-train_nums = 10000
+train_nums = 5000
 batch_size = 50
 
 save_file = "/home/allen/work/variableSave/lenet5/lenet1.ckpt"
@@ -46,7 +46,7 @@ yp = tf.placeholder(tf.float32,[None,10])
 
 
 cl1_kernal = 5
-cl1_in_depth = img_depth
+cl1_in_depth = filter_in_channel
 cl1_out_depth = 6
 cl1_layer_name = "layer1"
 #conv_layer1 is 28*28*10
@@ -146,13 +146,14 @@ while test_acc < 1:
         else:
             sess.run(init)
         train_x, train_y = mnist.train.next_batch(batch_size)
-        sess.run([loss, outputs, train_step, global_steps], feed_dict={xp: train_x, yp: train_y, keep_prob: 1, in_training:True})
+        train_x = batch_imgs_process(train_x)
+        sess.run([loss, outputs, train_step, global_steps], feed_dict={xp: train_x, yp: train_y, keep_prob: 0.95, in_training:True})
         step = sess.run(global_steps)
 
         while(step%train_nums!=0):
             train_x, train_y = mnist.train.next_batch(batch_size)
             train_x = batch_imgs_process(train_x)
-            lo, ou, _ , step, summary= sess.run([loss, outputs, train_step, global_steps, merged], feed_dict={xp: train_x, yp: train_y, keep_prob: 1,in_training:True})
+            lo, ou, _ , step, summary= sess.run([loss, outputs, train_step, global_steps, merged], feed_dict={xp: train_x, yp: train_y, keep_prob: 0.95,in_training:True})
 
             if step % 500 == 0:
                 train_writer.add_summary(summary,step)
