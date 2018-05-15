@@ -45,7 +45,7 @@ def startTrain(hps, mode):
             saver.restore(sess, save_file)
 
         base_step = sess.run(model.step)
-        end_step = int(base_step + 10000 + 1)
+        end_step = int(base_step + 5000 + 1)
         for itstep in range(base_step,end_step):
             if (itstep%10) <= 8:
                 images,labels = mnist.train.next_batch(hps.batch_nums)
