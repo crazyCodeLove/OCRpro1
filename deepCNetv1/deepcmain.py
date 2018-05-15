@@ -5,7 +5,7 @@ import pickle
 
 from mnistCompRes.mnisttool import imgUtil
 from mnistCompRes.mnisttool import ModelUtilv3s1
-from deepCNet.modelUtil import deepcnetModel
+from deepCNetv1.modelUtil import deepcnetModel
 
 HParams = namedtuple('HParams',
                      'batch_nums, num_classes, deep_net_fkn,'
