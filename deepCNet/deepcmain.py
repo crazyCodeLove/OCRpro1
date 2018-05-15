@@ -9,7 +9,7 @@ from deepCNet.modelUtil import deepcnetModel
 
 HParams = namedtuple('HParams',
                      'batch_nums, num_classes, deep_net_fkn,'
-                     'img_depth, img_width, des_img_size')
+                     'img_depth, img_width, des_img_size, filter_in_channel')
 
 
 logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet20.txt')
@@ -144,7 +144,8 @@ def main():
                   deep_net_fkn=20,
                   img_depth=1,
                   img_width=28,
-                  des_img_size=96
+                  des_img_size=96,
+                  filter_in_channel=1
                   )
     ModelUtilv3s1.init_peizhi(
         peizhifilename=peizhi_filename, peizhidict=peizhi_dict)
