@@ -20,7 +20,7 @@ class DeepCModel(object):
         # inputs:96
 
         cl1_kernal = 3
-        cl1_in_depth = 9
+        cl1_in_depth = self.hps.filter_in_channel
         cl1_out_depth = self.hps.deep_net_fkn*1
         cl1_layer_name = "layer1"
         with tf.variable_scope(cl1_layer_name):
@@ -28,11 +28,11 @@ class DeepCModel(object):
             conv1_weight = tf.get_variable('weight',
                                            [cl1_kernal, cl1_kernal, cl1_in_depth, cl1_out_depth],
                                            initializer=tf.truncated_normal_initializer(stddev=0.1))
-            # conv1_biases = tf.get_variable('bias', [cl1_out_depth])
+            conv1_biases = tf.get_variable('bias', [cl1_out_depth])
             conv1 = tf.nn.conv2d(inputx, conv1_weight, strides=[1, 1, 1, 1], padding='VALID')
-            # layer1_conv = tf.nn.bias_add(conv1, conv1_biases)
-            layer1_conv = conv1
-            layer1_conv = tf.layers.batch_normalization(layer1_conv, axis=0, training=in_training)
+            layer1_conv = tf.nn.bias_add(conv1, conv1_biases)
+            # layer1_conv = conv1
+            # layer1_conv = tf.layers.batch_normalization(layer1_conv, axis=0, training=in_training)
             layer1_conv = activateFunc(layer1_conv)
 
         cl2_layer_name = 'layer2'
@@ -50,11 +50,11 @@ class DeepCModel(object):
             conv3_weight = tf.get_variable('weight',
                                            [cl3_kernal, cl3_kernal, cl3_in_depth, cl3_out_depth],
                                            initializer=tf.truncated_normal_initializer(stddev=0.1))
-            # conv3_biases = tf.get_variable('bias', [cl3_out_depth])
+            conv3_biases = tf.get_variable('bias', [cl3_out_depth])
             conv3 = tf.nn.conv2d(layer2_pool, conv3_weight, strides=[1, 1, 1, 1], padding='VALID')
-            # layer3_conv = tf.nn.bias_add(conv3, conv3_biases)
-            layer3_conv = conv3
-            layer3_conv = tf.layers.batch_normalization(layer3_conv, axis=0, training=in_training)
+            layer3_conv = tf.nn.bias_add(conv3, conv3_biases)
+            # layer3_conv = conv3
+            # layer3_conv = tf.layers.batch_normalization(layer3_conv, axis=0, training=in_training)
             layer3_conv = activateFunc(layer3_conv)
 
         cl4_layer_name = 'layer4'
@@ -72,11 +72,11 @@ class DeepCModel(object):
             conv5_weight = tf.get_variable('weight',
                                            [cl5_kernal, cl5_kernal, cl5_in_depth, cl5_out_depth],
                                            initializer=tf.truncated_normal_initializer(stddev=0.1))
-            # conv5_biases = tf.get_variable('bias', [cl5_out_depth])
+            conv5_biases = tf.get_variable('bias', [cl5_out_depth])
             conv5 = tf.nn.conv2d(layer4_pool, conv5_weight, strides=[1, 1, 1, 1], padding='VALID')
-            # layer5_conv = tf.nn.bias_add(conv5, conv5_biases)
-            layer5_conv = conv5
-            layer5_conv = tf.layers.batch_normalization(layer5_conv, axis=0, training=in_training)
+            layer5_conv = tf.nn.bias_add(conv5, conv5_biases)
+            # layer5_conv = conv5
+            # layer5_conv = tf.layers.batch_normalization(layer5_conv, axis=0, training=in_training)
             layer5_conv = activateFunc(layer5_conv)
 
         cl6_layer_name = 'layer6'
@@ -96,9 +96,9 @@ class DeepCModel(object):
                                            initializer=tf.truncated_normal_initializer(stddev=0.1))
             conv7_biases = tf.get_variable('bias', [cl7_out_depth])
             conv7 = tf.nn.conv2d(layer6_pool, conv7_weight, strides=[1, 1, 1, 1], padding='VALID')
-            # layer7_conv = tf.nn.bias_add(conv7, conv7_biases)
-            layer7_conv = conv7
-            layer7_conv = tf.layers.batch_normalization(layer7_conv, axis=0, training=in_training)
+            layer7_conv = tf.nn.bias_add(conv7, conv7_biases)
+            # layer7_conv = conv7
+            # layer7_conv = tf.layers.batch_normalization(layer7_conv, axis=0, training=in_training)
             layer7_conv = activateFunc(layer7_conv)
 
         cl8_layer_name = 'layer8'
@@ -119,7 +119,6 @@ class DeepCModel(object):
             conv9_biases = tf.get_variable('bias', [cl9_out_depth])
             conv9 = tf.nn.conv2d(layer8_pool, conv9_weight, strides=[1, 1, 1, 1], padding='VALID')
             layer9_conv = tf.nn.bias_add(conv9, conv9_biases)
-            # layer9_conv = tf.layers.batch_normalization(layer9_conv, axis=0, training=in_training)
             layer9_conv = activateFunc(layer9_conv)
 
         cl10_layer_name = 'layer10'
@@ -140,7 +139,6 @@ class DeepCModel(object):
             conv11_biases = tf.get_variable('bias', [cl11_out_depth])
             conv11 = tf.nn.conv2d(layer10_pool, conv11_weight, strides=[1, 1, 1, 1], padding='VALID')
             layer11_conv = tf.nn.bias_add(conv11, conv11_biases)
-            # layer11_conv = tf.layers.batch_normalization(layer11_conv, axis=0, training=in_training)
             layer11_conv = activateFunc(layer11_conv)
 
         print("final outputs shape:", layer11_conv.get_shape().as_list())

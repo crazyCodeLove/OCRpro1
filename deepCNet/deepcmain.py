@@ -12,8 +12,8 @@ HParams = namedtuple('HParams',
                      'img_depth, img_width, des_img_size')
 
 
-logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet9.txt')
-logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepcs96f50BN3'
+logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet20.txt')
+logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepcs96f20'
 
 mnist = input_data.read_data_sets("../MNIST_DATA/", one_hot=True)
 save_file = "/home/allen/work/variableSave/deepcnet/deepcnet.ckpt"
@@ -68,11 +68,13 @@ def startTrain(hps, mode):
                     feed_dict=feed_dict)
                 trainacc = ModelUtilv3s1.get_accurate(outprediction, inlabels)
                 msg = "trainstep:%5d  loss:%e  train acc:%.5f"%(itstep, cost, trainacc)
-                logger.log_message(msg)
+
                 train_writer.add_summary(summary, itstep)
 
                 if itstep % 500 == 0:
                     logger.showAndLogMsg(msg)
+                else:
+                    logger.log_message(msg)
 
 
         print("before save")
@@ -139,7 +141,7 @@ def batch_imgs_process(batch_imgs, hps):
 def main():
     hps = HParams(batch_nums=50,
                   num_classes=10,
-                  deep_net_fkn=100,
+                  deep_net_fkn=20,
                   img_depth=1,
                   img_width=28,
                   des_img_size=96
