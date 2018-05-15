@@ -66,7 +66,7 @@ def single_img_resize(img, img_size, des_img_size, pad_width=6):
 def batch_imgs_pre_process(batch_imgs):
     oldtype = batch_imgs.dtype
     tsp = batch_imgs.shape
-    new_shape = (tsp[0],tsp[1],tsp[2],9)
+    new_shape = (tsp[0],tsp[1],tsp[2],4)
     result = np.zeros(new_shape, dtype=oldtype)
 
     for it in range(batch_imgs.shape[0]):
@@ -82,9 +82,9 @@ def single_img_pre_process(img):
     ori_dtype = img.dtype
 
     img = np.reshape(img, newshape=(ori_shape[0], ori_shape[1]))
-    gab = [img,]
-    for i in range(8):
-        gabor_real, gabor_virt = filters.gabor(img, frequency=0.8, theta=i*22.5)
+    gab = []
+    for i in range(4):
+        gabor_real, gabor_virt = filters.gabor(img, frequency=0.8, theta=i*45)
         gab.append(gabor_real)
 
     result = np.stack(gab,axis=2)
