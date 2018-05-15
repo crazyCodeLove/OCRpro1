@@ -10,7 +10,7 @@ from deepCNetv1.modelUtil import deepcnetModel
 HParams = namedtuple('HParams',
                      'batch_nums, num_classes, deep_net_fkn,'
                      'img_depth, img_width, des_img_size, filter_in_channel')
-
+#
 
 logger = ModelUtilv3s1.MyLog('/home/allen/work/data/resultlog/deepcNet/deepcnet14.txt')
 logDir = '/home/allen/work/data/resultlog/deepcNet/summary/deepcs96f50gabor3'
@@ -152,7 +152,7 @@ def main():
                   )
     ModelUtilv3s1.init_peizhi(
         peizhifilename=peizhi_filename, peizhidict=peizhi_dict)
-    msg = "sobel filter, no batch normalization"
+    msg = "gabor filter, no batch normalization"
     logger.showAndLogMsg(msg)
 
     while True:
