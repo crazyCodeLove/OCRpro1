@@ -31,6 +31,7 @@ def resize_pic(img,des_size):
 
 def gen_salt_filter():
     '''
+    2.2 pic
     添加椒盐噪声然后使用中值滤波和均值滤波
     '''
     gen = get_single_img_label()
@@ -41,15 +42,15 @@ def gen_salt_filter():
         media_camer = rank.mean(img, selem=disk(3))
 
         plt.figure()
-        plt.subplot(2, 2, 1)
+        plt.subplot(1,3, 1)
         plt.imshow(img)
         plt.title('add salt noise')
 
-        plt.subplot(2, 2, 2)
+        plt.subplot(1,3, 2)
         plt.imshow(fil_camer)
         plt.title('media filter')
 
-        plt.subplot(2, 2, 3)
+        plt.subplot(1,3, 3)
         plt.imshow(media_camer)
         plt.title('mean filter')
 
@@ -67,15 +68,15 @@ def gauss_filter():
         medium_img = rank.median(resize_img,selem=disk(3))
 
         plt.figure()
-        plt.subplot(2,2,1)
+        plt.subplot(1,3,1)
         plt.title('ori 28x28')
         plt.imshow(img)
 
-        plt.subplot(2,2,2)
+        plt.subplot(1,3,2)
         plt.imshow(resize_img)
         plt.title('resize 96x96')
 
-        plt.subplot(2, 2, 3)
+        plt.subplot(1,3, 3)
         plt.imshow(gauss_img)
         plt.title('gauss filter')
 
@@ -190,6 +191,94 @@ def gabor_filter():
         plt.title('135')
 
         plt.show()
+
+def activate_fun2():
+    plt.figure()
+    x = np.linspace(-5, 5, 1000)
+    y = [1 / (1 + np.exp(-i)) for i in x]
+    ax = plt.subplot(1,1,1)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    plt.title('Sigmoid')
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.plot(x, y)
+    plt.show()
+
+    plt.figure()
+    x = np.linspace(-5, 5, 1000)
+    y = [(np.exp(i) - np.exp(-i)) / (np.exp(i) + np.exp(-i)) for i in x]
+    ax = plt.subplot(1,1,1)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    plt.title('Tanh')
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.plot(x, y)
+    plt.show()
+
+    plt.figure()
+    x = np.linspace(-5, 5, 1000)
+    y = []
+    for i in x:
+        if i < 0:
+            y.append(0)
+        else:
+            y.append(i)
+    ax = plt.subplot(1,1,1)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    plt.title('ReLU')
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.plot(x, y)
+    plt.show()
+
+    plt.figure()
+    x = np.linspace(-5, 5, 1000)
+    y = []
+    ax = plt.subplot(1,1,1)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    for i in x:
+        if i < 0:
+            y.append(0.1 * i)
+        else:
+            y.append(i)
+    plt.title('LeakyReLU')
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.plot(x, y)
+    plt.show()
+
+    plt.figure()
+    ax = plt.subplot(1,1,1)
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.spines['left'].set_position(('data', 0))
+    ax.spines['bottom'].set_position(('data', 0))
+    x = np.linspace(-5, 5, 1000)
+    y = []
+    for i in x:
+        if i < 0:
+            y.append(0.1 * (np.exp(i) - 1))
+        else:
+            y.append(i)
+    plt.title('ELU')
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.plot(x, y)
+    plt.show()
+
+
 
 def activate_function():
     plt.figure()
@@ -338,14 +427,15 @@ def strage_1():
 def main():
     # gen_salt_filter()
     # gauss_filter()
+    activate_fun2()
     # strage_1()
     # canny_filter()
     # skeleton_retrive()
     # same_number()
-    gabor_filter()
+    # gabor_filter()
     # activate_function()
     # aserialPic()
-    img_aug()
+    # img_aug()
 
 if __name__ == "__main__":
     main()
